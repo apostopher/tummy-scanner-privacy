@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tummy Scanner - Support</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #0a1120;
+        color: #e2e8f0;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Animated grid background */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 24px 24px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Gradient glow */
+      .glow {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.15;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .glow-1 {
+        top: -200px;
+        left: -100px;
+        background: #0a7ea4;
+      }
+      .glow-2 {
+        bottom: -200px;
+        right: -100px;
+        background: #f1bf45;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 60px 24px 80px;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+
+      .app-icon {
+        width: 96px;
+        height: 96px;
+        background: linear-gradient(135deg, #162a39, #0a1120);
+        border-radius: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(10, 126, 164, 0.3);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #f1bf45;
+        font-weight: 500;
+      }
+
+      /* Cards */
+      .card {
+        background: linear-gradient(
+          135deg,
+          rgba(22, 42, 57, 0.6),
+          rgba(10, 17, 32, 0.8)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(10px);
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(10, 126, 164, 0.3);
+      }
+
+      .card-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+
+      .card h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 8px;
+      }
+
+      .card p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #94a3b8;
+      }
+
+      .card a {
+        color: #0a7ea4;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .card a:hover {
+        color: #0ea5e9;
+      }
+
+      /* FAQ */
+      .faq-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 16px 0;
+      }
+
+      .faq-item:last-child {
+        border-bottom: none;
+      }
+
+      .faq-q {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+
+      .faq-a {
+        font-size: 14px;
+        line-height: 1.6;
+        color: #94a3b8;
+      }
+
+      /* Disclaimer banner */
+      .disclaimer {
+        background: rgba(241, 191, 69, 0.08);
+        border: 1px solid rgba(241, 191, 69, 0.2);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .disclaimer-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .disclaimer p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #f1bf45;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        color: #475569;
+        font-size: 13px;
+      }
+
+      .footer a {
+        color: #0a7ea4;
+        text-decoration: none;
+      }
+
+      /* Scan line animation */
+      .scan-line {
+        position: fixed;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #0a7ea4, transparent);
+        opacity: 0.3;
+        z-index: 0;
+        animation: scan 4s ease-in-out infinite;
+      }
+
+      @keyframes scan {
+        0%,
+        100% {
+          top: 0;
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.3;
+        }
+        90% {
+          opacity: 0.3;
+        }
+        50% {
+          top: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="scan-line"></div>
+
+    <div class="container">
+      <div class="header">
+        <div class="app-icon">🫁</div>
+        <h1>Tummy Scanner</h1>
+        <p class="subtitle">Support &amp; Help</p>
+      </div>
+
+      <div class="disclaimer">
+        <span class="disclaimer-icon">⚠️</span>
+        <p>
+          Tummy Scanner is an entertainment app only. It is not a medical device
+          and cannot be used for diagnosis, treatment, or health monitoring.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📬</div>
+        <h2>Contact Us</h2>
+        <p>
+          Have a question, found a bug, or just want to say hi? Reach out and
+          we'll get back to you as soon as we can.
+        </p>
+        <p style="margin-top: 12px">
+          <a href="mailto:apostopher@gmail.com">apostopher@gmail.com</a>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">❓</div>
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <p class="faq-q">What does Tummy Scanner do?</p>
+          <p class="faq-a">
+            Tummy Scanner is a fun, interactive app that lets kids explore the
+            human digestive system. Swipe to scan and tap on organs to learn
+            about them!
+          </p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Does the app collect my data?</p>
+          <p class="faq-a">
+            No. Tummy Scanner does not collect, store, or share any personal
+            data whatsoever. Everything stays on your device.
+          </p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Is this a real medical scanner?</p>
+          <p class="faq-a">
+            No! Tummy Scanner is purely for fun and learning. It is not a
+            medical device and should never be used in place of professional
+            medical advice.
+          </p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Does it work on iPad?</p>
+          <p class="faq-a">
+            Tummy Scanner is currently designed for iPhone only.
+          </p>
+        </div>
+        <div class="faq-item">
+          <p class="faq-q">Why does the app ask for microphone access?</p>
+          <p class="faq-a">
+            The microphone is used for fun in-app sound features. Audio is never
+            recorded, stored, or sent anywhere.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <h2>Privacy</h2>
+        <p>
+          Your privacy matters. Tummy Scanner collects zero data — no analytics,
+          no tracking, no accounts. Read our full
+          <a href="https://apostopher.github.io/tummy-scanner-privacy/"
+            >Privacy Policy</a
+          >.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💡</div>
+        <h2>App Version</h2>
+        <p>
+          Running into an issue? Make sure you're on the latest version of Tummy
+          Scanner from the App Store. Most issues are resolved with updates.
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>&copy; 2026 Tummy Scanner. Made with ❤️ for curious kids.</p>
+      </div>
+    </div>
+  </body>
+</html>
