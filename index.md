@@ -19,10 +19,6 @@ Tummy Scanner does not collect, store, or transmit any personal data or user inf
 - We do not use cookies, tracking pixels, or similar tracking technologies.
 - We do not create user profiles or accounts.
 
-## Microphone Access
-
-The App may request access to your device's microphone solely for in-app entertainment features. Audio captured through the microphone is processed entirely on your device and is **never recorded, stored, or transmitted** to any server or third party.
-
 ## No Third-Party Sharing
 
 We do not share, sell, rent, or disclose any user data to third parties. Since we do not collect any data, there is nothing to share.
